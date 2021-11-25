@@ -26,11 +26,11 @@ class OptionSelect extends React.Component<FilterProps> {
     let arr: any[] = [];
     if (this.props.mapOptions != undefined)
       this.props.mapOptions.forEach((value, key) =>
-        arr.push(<option value={String(key)}>{value}</option>)
+        arr.push(<option key={key} value={String(key)}>{value}</option>)
       );
     if (this.props.arrOptions != undefined)
       return this.props.arrOptions.map((value) => (
-        <option value={value}>{value}</option>
+        <option key={value} value={value}>{value}</option>
       ));
     return arr;
   }

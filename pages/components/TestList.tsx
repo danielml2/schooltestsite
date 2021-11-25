@@ -40,7 +40,7 @@ class TestList extends React.Component {
 
         return subjectFilter && classFilter && gradeFilter && typeFilter;
     }) 
-    this.setState({ displayTests: filtered })
+    this.setState({ displayTests: filtered.sort((a,b) => a["dueDate"] - b["dueDate"])})
   }
 
   numberArray(arr: any[]) {
@@ -48,7 +48,7 @@ class TestList extends React.Component {
   }
 
   setTests(snapshot: any[]) {
-   this.setState({ tests: snapshot, displayTests: snapshot });
+   this.setState({ tests: snapshot, displayTests: snapshot.sort((a,b) => a["dueDate"] - b["dueDate"]) });
   }
   renderTests(tests: any[]) {
     return tests.map((test, index) => <Test key={index} {...test}></Test>);

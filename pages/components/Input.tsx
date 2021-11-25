@@ -21,7 +21,7 @@ class Input extends React.Component<InputProps, InputState> {
 
     state = {
         subjectFilter: "ALL",
-        gradeFilter: 11,
+        gradeFilter: -1,
         classNumFilter: -1,
         typeFilter: "ALL"
     }

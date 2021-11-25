@@ -1,4 +1,4 @@
-import { getDatabase, onValue , onChildAdded, ref, onChildRemoved, DataSnapshot} from "firebase/database";
+import { getDatabase, onValue, ref, DataSnapshot} from "firebase/database";
 import { initializeApp } from "firebase/app";
 const app = initializeApp({
     apiKey: "AIzaSyDIsnhdo4bc6-vFu24Hah9BGdfMb61aXeE",
@@ -11,8 +11,6 @@ const db = getDatabase(app);
 
 const loadTests = async (updateTests : (snapshot: any) => void) => {
     onValue(ref(db, "tests/"), (snapshot) => updateTests(reloadTests(load(snapshot))))
-    // onChildAdded(ref(db, "tests/"), (snapshot) => updateTests(reloadTests(snapshot)))
-    // onChildRemoved(ref(db, "tests/"), (snapshot) => updateTests(reloadTests(snapshot)))
 }
 
 function load(snapshot: DataSnapshot) {
