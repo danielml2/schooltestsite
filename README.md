@@ -1,34 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## School Test Site
 
-## Getting Started
+This is combined of two apps, one app is a java "server side" which takes all of the tests from the Google Excel of the test schedule and exports them for each grade, onto a firebase database.
 
-First, run the development server:
+And this website which used to showcase the tests on a website, nicely organized and stuff.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Each test is built from 5 key properties:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`dueDate`: the time the test is set on for, as system time (e.g. ms since Sep 1st 1970)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+`subject`: name of the subject, obviously
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+`type`: Type of the test (e.g. Bagrot, Matconet, etc)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+`classNums`: An array of numbers representing which classes have that test, since usually on middle school they have class specific test, if it's the entire grade it would be a one element array with -1
 
-## Learn More
+`gradeNum`: Grade number, (e.g. Grade 7,8,9)
 
-To learn more about Next.js, take a look at the following resources:
+There's also a details property for comments later on about which lessons is it on, etc etc - might be removed currently is unused
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Java "Server Side"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Basically, the way i get the tests from the excel file, is by simply downloading the excel file using Google Drive API
 
-## Deploy on Vercel
+Running over the entire excel document, checking each cell for two things to contain in it:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+A name of a subject, and a type of test [see here](constants/constants.ts),
+If I detect those things in that specific cell on the file, I go to the most right column of the spreadsheet where the dates are at and parse the date from there.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+After that, I check the column it shows at, and if it shows on multiple columns in the same row, and by the index of the column, I can get which classes are getting the test, If it's a test universal to the whole grade, I just put a -1 in the classNums array
+
+Every time it runs and checks the whole thing, it compares the tests loaded to the tests stored in the local JSON file, and removes/adds tests accordingly from the database and json file.
+
+This could theoretically work as a server side application, It's just that I don't have any hosting to run it on so it just runs every time my computer turns on (and by that, we get daily updates 😎)
