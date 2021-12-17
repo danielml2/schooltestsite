@@ -12,7 +12,8 @@ class TestList extends React.Component {
   render() {
     return (
       <div className="testList">
-        <div className="title">סה"כ מבחנים בכל בית ספר: {this.state.tests && this.state.tests.length}</div>{" "}
+        
+        <div className="title">סה&lsquo;כ מבחנים בכל בית ספר: {this.state.tests && this.state.tests.length}</div>
         <Input sendInput={this.onSearch.bind(this)}></Input>
         <div className="miniHeader">כלל התוצאות: {this.state.tests && this.state.displayTests.length}</div>
         <div className="testListContent">
