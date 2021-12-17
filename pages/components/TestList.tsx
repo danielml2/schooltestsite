@@ -1,10 +1,7 @@
-import React, { ChangeEventHandler } from "react";
+import React from "react";
 import { loadTests, db } from "../../firebase/firebase";
 import Test from "./test";
-import TestData from "./test";
 import Input from "./Input";
-import InputState from "./Input"
-import { testTypes } from "../../constants/constants";
 class TestList extends React.Component {
   state = {
     tests: [],
@@ -14,12 +11,13 @@ class TestList extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>Total Tests: {this.state.tests && this.state.displayTests.length}</h1>{" "}
+      <div className="testList">
+        <div className="title">סה"כ מבחנים בכל בית ספר: {this.state.tests && this.state.tests.length}</div>{" "}
         <Input sendInput={this.onSearch.bind(this)}></Input>
-        <br />
+        <div className="miniHeader">כלל התוצאות: {this.state.tests && this.state.displayTests.length}</div>
+        <div className="testListContent">
         {this.state.displayTests && this.renderTests(this.state.displayTests)}
-        <br />
+        </div>
       </div>
     );
   }

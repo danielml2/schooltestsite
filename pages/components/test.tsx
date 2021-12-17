@@ -19,9 +19,10 @@ class Test extends React.Component<TestData,TestData> {
    
     render() {
      
-        return <div>
-            <h3>Grade ({this.props.gradeNum}) {this.props.type}: {this.props.subject}</h3>
-            {displayClassNums(this.props.classNums)} {this.renderDate()}
+        return <div className="test">
+            <div>Grade ({this.props.gradeNum}) {this.props.type}: {this.props.subject}</div>
+            <div>{displayClassNums(this.props.classNums)}</div>
+            {this.renderDate()}
         </div>;
     }
 
@@ -29,7 +30,7 @@ class Test extends React.Component<TestData,TestData> {
         if(this.props.dueDate == undefined) return;
         let date = new Date(this.props.dueDate)
         const mo = new Intl.DateTimeFormat('en', { month: 'long' }).format(date)
-        const da = new Intl.DateTimeFormat('he', { day: '2-digit' }).format(date)
+        const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date)
         return <div>{da} {mo}</div>
     }
 
@@ -43,9 +44,12 @@ class Test extends React.Component<TestData,TestData> {
     let display = ""
     if(classNums === undefined)
         return display;
-    classNums.forEach((num) => {
+    classNums.forEach((num,index) => {
         if(num == -1) display += "ALL"
-        else display += num + ","
+        else {
+            display += num;
+            if(index != classNums.length-1) display += ", "
+        }
     })
     return display;
 }

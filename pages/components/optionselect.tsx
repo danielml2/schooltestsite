@@ -10,7 +10,7 @@ class OptionSelect extends React.Component<FilterProps> {
   render() {
     return (
       <div>
-        <select onChange={this.onSelect.bind(this)}>
+        <select className="searchSelect" onChange={this.onSelect.bind(this)}>
           {this.renderOptions()}
         </select>
       </div>

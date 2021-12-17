@@ -29,11 +29,11 @@ class Input extends React.Component<InputProps, InputState> {
 
     render() { 
       
-        return <div>Subjects: <OptionSelect mapOptions={subjects} onChange={this.onSubjectChange.bind(this)}></OptionSelect>
+        return <div className="input"><OptionSelect mapOptions={subjects} onChange={this.onSubjectChange.bind(this)}></OptionSelect>
             <OptionSelect mapOptions={testTypes} onChange={this.onTypeChange.bind(this)}></OptionSelect>
             <OptionSelect arrOptions={classNums} onChange={this.onClassNumChange.bind(this)}></OptionSelect>
             <OptionSelect  mapOptions={gradeNums} onChange={this.onGradeChange.bind(this)}></OptionSelect>
-            <input type="button" value="Search" onClick={this.send.bind(this)}></input>
+            <input className="button" type="button" value="Search" onClick={this.send.bind(this)}></input>
         </div>
     }
 
