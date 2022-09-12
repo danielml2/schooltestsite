@@ -1,6 +1,6 @@
 import React from "react";
 import { loadTests, db } from "../../../firebase/firebase";
-import Test from "../Test";
+import Test from "../test";
 import Input from "../Input";
 import { testTypes } from "../../../constants/constants";
 
