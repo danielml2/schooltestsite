@@ -22,7 +22,7 @@ class MainView extends React.Component<MainProps, MainState> {
     }
 
     display() {
-       
+       return <div></div>
     }
 
 }
