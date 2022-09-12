@@ -1,4 +1,4 @@
-import { getDatabase, onValue, ref, DataSnapshot} from "firebase/database";
+import { getDatabase, onValue, ref, DataSnapshot, get } from "firebase/database";
 import { initializeApp } from "firebase/app";
 const app = initializeApp({
     apiKey: "AIzaSyDIsnhdo4bc6-vFu24Hah9BGdfMb61aXeE",
@@ -9,8 +9,8 @@ const app = initializeApp({
 const db = getDatabase(app);
 
 
-const loadTests = async (updateTests : (snapshot: any) => void) => {
-    onValue(ref(db, "tests/"), (snapshot) => updateTests(reloadTests(load(snapshot))))
+const loadTests = async (year: string, updateTests : (snapshot: any) => void) => {
+    get(ref(db, `years/${year}/tests/`)).then((snapshot) => updateTests(detachObjectsFromKeys(load(snapshot))));
 }
 
 function load(snapshot: DataSnapshot) {
@@ -23,7 +23,11 @@ function load(snapshot: DataSnapshot) {
     return newArr;
 }
 
-function reloadTests(snapshot: any[]) {
+const loadChanges = async (limit: any,updateChanges : (snapshot: any) => void)  => {
+    get(ref(db,"changes/")).then((snasphot) => updateChanges(detachObjectsFromKeys((load(snasphot)))))
+}
+
+function detachObjectsFromKeys(snapshot: any[]) {
     // Since basically every test is like a property key in the database, we can loop over the keys and get the test objects from there
     let tests = [];
     for(let grade of snapshot) {
@@ -36,4 +40,4 @@ function reloadTests(snapshot: any[]) {
     return tests;    
 }
 
-export {loadTests, db}
+export {loadTests, db, loadChanges}

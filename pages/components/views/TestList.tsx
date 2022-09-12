@@ -1,21 +1,27 @@
 import React from "react";
-import { loadTests, db } from "../../firebase/firebase";
-import Test from "./test";
-import Input from "./Input";
+import { loadTests, db } from "../../../firebase/firebase";
+import Test from "../Test";
+import Input from "../Input";
+import { testTypes } from "../../../constants/constants";
+
+
+
 class TestList extends React.Component {
   state = {
     tests: [],
     displayTests: [],
-    filterSubject: "",
-  };
+  }
 
   render() {
+    if((this.state.tests == undefined || this.state.tests.length <= 0)) {
+      return <div>Loading...</div>
+    }
+
+  
     return (
       <div className="testList">
-        
-        <div className="title">סה&lsquo;כ מבחנים בכל בית ספר: {this.state.tests && this.state.tests.length}</div>
-        <Input sendInput={this.onSearch.bind(this)}></Input>
-        <div className="miniHeader">כלל התוצאות: {this.state.tests && this.state.displayTests.length}</div>
+        <Input sendInput={this.filterTests.bind(this)}></Input>
+        <div className="miniHeader">כלל התוצאות: {this.state.tests && this.state.displayTests.length} (מתוך {this.state.tests && this.state.tests.length} סה"כ מבחנים)</div>
         <div className="testListContent">
         {this.state.displayTests && this.renderTests(this.state.displayTests)}
         </div>
@@ -24,11 +30,16 @@ class TestList extends React.Component {
   }
 
   async componentDidMount() {
-    await loadTests(this.setTests.bind(this));
-  }
+    
+    await loadTests("2022-2023", this.setTests.bind(this));
 
-  onSearch(filters: any) {
+  };
+
+
+  filterTests(filters: any) {
       console.log(filters)
+    if(filters == undefined)
+          return;  
     let filtered = this.state.tests.filter(value => {
         // i hate that i have to do the casting for each type here but typescript is big dumb so i have to, and yeah
         let subjectFilter = filters.subjectFilter == "ALL" ? true : String(value["subject"]) == filters.subjectFilter
@@ -37,7 +48,9 @@ class TestList extends React.Component {
         let gradeFilter = Number(value["gradeNum"]) == filters.gradeFilter || filters.gradeFilter == -1;
         let typeFilter = filters.typeFilter == "ALL" ? true : String(value["type"]) == filters.typeFilter
 
-        return subjectFilter && classFilter && gradeFilter && typeFilter;
+        let historyFilter = filters.includeHistory ? true : new Date().getTime() < value["dueDate"];
+
+        return subjectFilter && classFilter && gradeFilter && typeFilter && historyFilter;
     }) 
     this.setState({ displayTests: filtered.sort((a,b) => a["dueDate"] - b["dueDate"])})
   }
@@ -47,7 +60,7 @@ class TestList extends React.Component {
   }
 
   setTests(snapshot: any[]) {
-   this.setState({ tests: snapshot, displayTests: snapshot.sort((a,b) => a["dueDate"] - b["dueDate"]) });
+    this.setState({ tests: snapshot, displayTests: snapshot.sort((a,b) => a["dueDate"] - b["dueDate"]) });
   }
   renderTests(tests: any[]) {
     return tests.map((test, index) => <Test key={index} {...test}></Test>);

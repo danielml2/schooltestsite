@@ -1,12 +1,18 @@
 import React from "react";
 
-interface FilterProps {
+interface FilterInputProps {
   mapOptions?: Map<any, String>;
   arrOptions?: any[];
-  onChange?: (value: any) => void;
+  startValue?: any;
+  onChange: (value: any) => void;
 }
 
-class OptionSelect extends React.Component<FilterProps> {
+class OptionSelect extends React.Component<FilterInputProps> {
+
+  constructor(props: FilterInputProps) {
+    super(props)
+  }
+
   render() {
     return (
       <div>
@@ -25,13 +31,21 @@ class OptionSelect extends React.Component<FilterProps> {
   renderOptions() {
     let arr: any[] = [];
     if (this.props.mapOptions != undefined)
-      this.props.mapOptions.forEach((value, key) =>
-        arr.push(<option key={key} value={String(key)}>{value}</option>)
-      );
+      this.props.mapOptions.forEach((value, key) => {
+        if(key == this.props.startValue) {
+          arr.push(<option key={key} value={String(key)} selected={true}>{value}</option>)
+        } 
+        else 
+            arr.push(<option key={key} value={String(key)}>{value}</option>)
+  });
     if (this.props.arrOptions != undefined)
-      return this.props.arrOptions.map((value) => (
-        <option key={value} value={value}>{value}</option>
-      ));
+      return this.props.arrOptions.map((value) => {
+        if(value === this.props.startValue) {
+          return (<option key={value} value={value} selected={true}>{value}</option>)
+        }
+
+        return (<option key={value} value={value} >{value}</option>)
+      });
     return arr;
   }
 }

@@ -11,6 +11,8 @@ interface InputState {
     gradeFilter: number
     classNumFilter: number
     typeFilter: String
+    includeHistory: boolean
+    finished: boolean
 }
  
 class Input extends React.Component<InputProps, InputState> {
@@ -23,16 +25,41 @@ class Input extends React.Component<InputProps, InputState> {
         subjectFilter: "ALL",
         gradeFilter: -1,
         classNumFilter: -1,
-        typeFilter: "ALL"
+        typeFilter: "ALL",
+        includeHistory: false,
+        finished: false
     }
+
     
+    async componentDidMount() {
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString)
+        params.forEach((value, key) => console.log(key + ": " + value))
+        let filterParams = {
+            subjectFilter: !params.has("subject") ? "ALL" : String(params.get("subject")),
+            gradeFilter: !params.has("grade") ?  -1 : Number(params.get("grade")),
+            classNumFilter: !params.has("classNum") ? -1 : Number(params.get("classNum")),
+            typeFilter: !params.has("testType") ? "ALL" : String(params.get("testType")),
+            includeHistory: !params.has("includeHistory") ? false : Boolean(params.get("includeHistory")),
+            finished: true
+        }
+        this.setState(filterParams)
+        console.log("component")
+        this.props.sendInput(filterParams)
+    }
 
     render() { 
+        if(!this.state.finished)
+            return <div>Loading...</div>
       
-        return <div className="input"><OptionSelect mapOptions={subjects} onChange={this.onSubjectChange.bind(this)}></OptionSelect>
-            <OptionSelect mapOptions={testTypes} onChange={this.onTypeChange.bind(this)}></OptionSelect>
-            <OptionSelect arrOptions={classNums} onChange={this.onClassNumChange.bind(this)}></OptionSelect>
-            <OptionSelect  mapOptions={gradeNums} onChange={this.onGradeChange.bind(this)}></OptionSelect>
+        return <div className="input"><OptionSelect mapOptions={subjects} onChange={this.onSubjectChange.bind(this)} startValue={this.state.subjectFilter}></OptionSelect>
+            <OptionSelect mapOptions={testTypes} onChange={this.onTypeChange.bind(this)} startValue={this.state.typeFilter}></OptionSelect>
+            <OptionSelect arrOptions={classNums} onChange={this.onClassNumChange.bind(this)} startValue={this.state.classNumFilter}></OptionSelect>
+            <OptionSelect  mapOptions={gradeNums} onChange={this.onGradeChange.bind(this)} startValue={this.state.gradeFilter}></OptionSelect>
+            <label className="searchSelect">
+                <input type="checkbox" onChange={this.onHistoryChange.bind(this)} checked={this.state.includeHistory}></input>
+                ?להראות מבחנים קודמים להיום
+            </label>
             <input className="button" type="button" value="Search" onClick={this.send.bind(this)}></input>
         </div>
     }
@@ -41,27 +68,28 @@ class Input extends React.Component<InputProps, InputState> {
         this.props.sendInput(this.state);
     }
 
+    onHistoryChange(value: any) {
+      this.setState({ includeHistory: value.target.checked}, () => this.send())
+    }
+
     onSubjectChange(value: any) {
-        this.setState({subjectFilter: value})
+        this.setState({subjectFilter: value}, () => this.send())
     }
 
     onClassNumChange(value : any) {
         if(value == "שכבתי")
             value = -1;
-        this.setState({ classNumFilter: value})
+        this.setState({ classNumFilter: value}, () => this.send())
     }
 
     onTypeChange(value : any) {
-        this.setState({typeFilter:value })
+        this.setState({typeFilter:value }, () => this.send())
     }
 
     onGradeChange(value : any) {
-        this.setState({ gradeFilter: value })
+        this.setState({ gradeFilter: value }, () => this.send())
     }
 
-    getFilters() {
-        return this.state;
-    }
 
 }
  

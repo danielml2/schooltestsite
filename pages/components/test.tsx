@@ -29,8 +29,8 @@ class Test extends React.Component<TestData,TestData> {
     renderDate() {
         if(this.props.dueDate == undefined) return;
         let date = new Date(this.props.dueDate)
-        const mo = new Intl.DateTimeFormat('en', { month: 'long' }).format(date)
-        const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date)
+        const mo = new Intl.DateTimeFormat('he', { month: 'long' }).format(date)
+        const da = new Intl.DateTimeFormat('he', { day: '2-digit' }).format(date)
         return <div>{da} {mo}</div>
     }
 
