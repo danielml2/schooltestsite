@@ -19,11 +19,13 @@ class TestList extends React.Component {
 
   
     return (
-      <div className="testList">
+      <div className="">
         <Input sendInput={this.filterTests.bind(this)}></Input>
-        <div className="miniHeader">כלל התוצאות: {this.state.tests && this.state.displayTests.length} (מתוך {this.state.tests && this.state.tests.length} סהכ מבחנים)</div>
-        <div className="testListContent">
+        <div style={{ direction: "rtl"}} className="text-white text-center">כלל התוצאות: {this.state.tests && this.state.displayTests.length} (מתוך {this.state.tests && this.state.tests.length} סהכ מבחנים)</div>
+        <div>
         {this.state.displayTests && this.renderTests(this.state.displayTests)}
+        </div>
+        <div>
         </div>
       </div>
     );

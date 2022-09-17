@@ -19,10 +19,12 @@ class Test extends React.Component<TestData,TestData> {
    
     render() {
      
-        return <div className="test">
-            <div>Grade ({this.props.gradeNum}) {this.props.type}: {this.props.subject}</div>
-            <div>{displayClassNums(this.props.classNums)}</div>
-            {this.renderDate()}
+        return <div className="card h-50 bg-[#5aaef2] shadow-xl mt-5 mx-2">
+            <div className="card-body">
+                <div className="card-title ">Grade ({this.props.gradeNum}) {this.props.type}: {this.props.subject}</div>
+                <div className="">{displayClassNums(this.props.classNums)}</div>
+                {this.renderDate()}
+            </div>
         </div>;
     }
 
@@ -31,7 +33,7 @@ class Test extends React.Component<TestData,TestData> {
         let date = new Date(this.props.dueDate)
         const mo = new Intl.DateTimeFormat('he', { month: 'long' }).format(date)
         const da = new Intl.DateTimeFormat('he', { day: '2-digit' }).format(date)
-        return <div>{da} {mo}</div>
+        return <div className="">{da} {mo}</div>
     }
 
     getSubject() {

@@ -4,7 +4,7 @@ import TestList from './components/views/TestList'
 
 const Home: NextPage = () => {
   return (
-    <div><TestList></TestList></div>
+    <div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center"><TestList></TestList></div>
   )
 }
 

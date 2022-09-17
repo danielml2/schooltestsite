@@ -52,16 +52,28 @@ class Input extends React.Component<InputProps, InputState> {
         if(!this.state.finished)
             return <div>Loading...</div>
       
-        return <div className="input"><OptionSelect mapOptions={subjects} onChange={this.onSubjectChange.bind(this)} startValue={this.state.subjectFilter}></OptionSelect>
+        return <div className="collapse collapse-plus">
+        <input type="checkbox" /> 
+        <div style={{ direction: "rtl"}} className="collapse-title  text-xl font-medium text-white">
+            הגדרות סינון
+        </div>
+        <div className="collapse-content"> 
+        <div style={{ direction: "rtl"}} className="mx-auto">
+            <OptionSelect mapOptions={subjects} onChange={this.onSubjectChange.bind(this)} startValue={this.state.subjectFilter}></OptionSelect>
             <OptionSelect mapOptions={testTypes} onChange={this.onTypeChange.bind(this)} startValue={this.state.typeFilter}></OptionSelect>
             <OptionSelect arrOptions={classNums} onChange={this.onClassNumChange.bind(this)} startValue={this.state.classNumFilter}></OptionSelect>
             <OptionSelect  mapOptions={gradeNums} onChange={this.onGradeChange.bind(this)} startValue={this.state.gradeFilter}></OptionSelect>
-            <label className="searchSelect">
-                <input type="checkbox" onChange={this.onHistoryChange.bind(this)} checked={this.state.includeHistory}></input>
-                ?להראות מבחנים קודמים להיום
+            <div style={{ direction: "rtl"}}>
+            <input  type="checkbox" onChange={this.onHistoryChange.bind(this)} checked={this.state.includeHistory}></input> 
+            <label style={{ direction: "rtl"}} className="text-white text-center">
+                להראות מבחנים קודמים להיום?
             </label>
-            <input className="button" type="button" value="Search" onClick={this.send.bind(this)}></input>
+            </div>
         </div>
+        </div>
+        </div>;
+        
+        
     }
 
     send() {
