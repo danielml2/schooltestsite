@@ -6,13 +6,12 @@ interface InputProps {
     sendInput: (value: any) => void
 }
  
-interface InputState {
-    subjectFilter: String 
-    gradeFilter: number
-    classNumFilter: number
-    typeFilter: String
+interface InputState  {
+    subject: String 
+    grade: number
+    classNum: number
+    testType: String
     includeHistory: boolean
-    finished: boolean
 }
  
 class Input extends React.Component<InputProps, InputState> {
@@ -20,36 +19,25 @@ class Input extends React.Component<InputProps, InputState> {
     constructor(props: InputProps) {
         super(props);
     }
-
-    state = {
-        subjectFilter: "ALL",
-        gradeFilter: -1,
-        classNumFilter: -1,
-        typeFilter: "ALL",
-        includeHistory: false,
-        finished: false
-    }
-
     
     async componentDidMount() {
         const queryString = window.location.search;
         const params = new URLSearchParams(queryString)
         params.forEach((value, key) => console.log(key + ": " + value))
+
         let filterParams = {
-            subjectFilter: !params.has("subject") ? "ALL" : String(params.get("subject")),
-            gradeFilter: !params.has("grade") ?  -1 : Number(params.get("grade")),
-            classNumFilter: !params.has("classNum") ? -1 : Number(params.get("classNum")),
-            typeFilter: !params.has("testType") ? "ALL" : String(params.get("testType")),
+            subject: !params.has("subject") ? "ALL" : String(params.get("subject")),
+            grade: !params.has("grade") ?  -1 : Number(params.get("grade")),
+            classNum: !params.has("classNum") ? -1 : Number(params.get("classNum")),
+            testType: !params.has("testType") ? "ALL" : String(params.get("testType")),
             includeHistory: !params.has("includeHistory") ? false : Boolean(params.get("includeHistory")),
-            finished: true
         }
         this.setState(filterParams)
-        console.log("component")
         this.props.sendInput(filterParams)
     }
 
     render() { 
-        if(!this.state.finished)
+        if(this.state == undefined)
             return <div>Loading...</div>
       
         return <div className="collapse collapse-plus">
@@ -59,12 +47,17 @@ class Input extends React.Component<InputProps, InputState> {
         </div>
         <div className="collapse-content"> 
         <div style={{ direction: "rtl"}} className="mx-auto">
-            <OptionSelect mapOptions={subjects} onChange={this.onSubjectChange.bind(this)} startValue={this.state.subjectFilter}></OptionSelect>
-            <OptionSelect mapOptions={testTypes} onChange={this.onTypeChange.bind(this)} startValue={this.state.typeFilter}></OptionSelect>
-            <OptionSelect arrOptions={classNums} onChange={this.onClassNumChange.bind(this)} startValue={this.state.classNumFilter}></OptionSelect>
-            <OptionSelect  mapOptions={gradeNums} onChange={this.onGradeChange.bind(this)} startValue={this.state.gradeFilter}></OptionSelect>
+            <OptionSelect mapOptions={subjects} onChange={(val) => this.onFilterChange("subject", val)} startValue={this.state.subject}></OptionSelect>
+
+            <OptionSelect mapOptions={testTypes} onChange={(val) => this.onFilterChange("testType", val)} startValue={this.state.testType}></OptionSelect>
+
+            <OptionSelect arrOptions={classNums} onChange={(val) => this.onFilterChange("classNum", val)} startValue={this.state.classNum}></OptionSelect>
+
+            <OptionSelect  mapOptions={gradeNums} onChange={(val) => this.onFilterChange("grade", val)} startValue={this.state.grade}></OptionSelect>
             <div style={{ direction: "rtl"}}>
-            <input  type="checkbox" onChange={this.onHistoryChange.bind(this)} checked={this.state.includeHistory}></input> 
+            <input type="checkbox" onChange={(event) => this.onFilterChange("includeHistory", event.target.checked) } checked={this.state.includeHistory}></input> 
+
+            
             <label style={{ direction: "rtl"}} className="text-white text-center">
                 להראות מבחנים קודמים להיום?
             </label>
@@ -76,32 +69,27 @@ class Input extends React.Component<InputProps, InputState> {
         
     }
 
-    send() {
-        this.props.sendInput(this.state);
-    }
-
-    onHistoryChange(value: any) {
-      this.setState({ includeHistory: value.target.checked}, () => this.send())
-    }
-
-    onSubjectChange(value: any) {
-        this.setState({subjectFilter: value}, () => this.send())
-    }
-
-    onClassNumChange(value : any) {
+    onFilterChange(key: string, value: any) {
         if(value == "שכבתי")
-            value = -1;
-        this.setState({ classNumFilter: value}, () => this.send())
-    }
+             value = -1;
+        
+        const defaultValues = ["ALL", -1, "שכבתי"]
 
-    onTypeChange(value : any) {
-        this.setState({typeFilter:value }, () => this.send())
-    }
+       let newState = this.state;
+       (newState as any)[key] = value;
+       this.setState(newState, () => {
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString)
 
-    onGradeChange(value : any) {
-        this.setState({ gradeFilter: value }, () => this.send())
-    }
+        if(defaultValues.includes(value))
+            params.delete(key)
+        else
+            params.set(key, value)
 
+        window.history.replaceState(null,'', "?"+params.toString())
+        this.props.sendInput(this.state);
+    })
+    }
 
 }
  

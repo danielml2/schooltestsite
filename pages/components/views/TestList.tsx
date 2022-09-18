@@ -39,18 +39,17 @@ class TestList extends React.Component {
 
 
   filterTests(filters: any) {
-      console.log(filters)
     if(filters == undefined)
-          return;  
+          return; 
     let filtered = this.state.tests.filter(value => {
         // i hate that i have to do the casting for each type here but typescript is big dumb so i have to, and yeah
-        let subjectFilter = filters.subjectFilter == "ALL" ? true : String(value["subject"]) == filters.subjectFilter
+        let subjectFilter = filters.subject == "ALL" ? true : String(value["subject"]) == filters.subject
 
-        let classFilter = (filters.classNumFilter == -1) ? true : this.numberArray(value["classNums"]).includes(Number(filters.classNumFilter)) || this.numberArray(value["classNums"]).includes(-1)
-        let gradeFilter = Number(value["gradeNum"]) == filters.gradeFilter || filters.gradeFilter == -1;
-        let typeFilter = filters.typeFilter == "ALL" ? true : String(value["type"]) == filters.typeFilter
+        let classFilter = (filters.classNum == -1) ? true : this.numberArray(value["classNums"]).includes(Number(filters.classNum)) || this.numberArray(value["classNums"]).includes(-1)
+        let gradeFilter = Number(value["gradeNum"]) == filters.grade || filters.grade == -1;
+        let typeFilter = filters.testType == "ALL" ? true : String(value["type"]) == filters.testType
 
-        let historyFilter = filters.includeHistory ? true : new Date().getTime() < value["dueDate"];
+        let historyFilter = filters.includeHistory ? true : new Date().getTime() <= value["dueDate"];
 
         return subjectFilter && classFilter && gradeFilter && typeFilter && historyFilter;
     }) 
