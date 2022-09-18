@@ -73,7 +73,7 @@ class Input extends React.Component<InputProps, InputState> {
         if(value == "שכבתי")
              value = -1;
         
-        const defaultValues = ["ALL", -1, "שכבתי"]
+        const defaultValues = ["ALL", -1, "שכבתי","-1",false]
 
        let newState = this.state;
        (newState as any)[key] = value;

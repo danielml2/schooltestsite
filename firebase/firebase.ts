@@ -13,6 +13,12 @@ const loadTests = async (year: string, updateTests : (snapshot: any) => void) =>
     get(ref(db, `years/${year}/tests/`)).then((snapshot) => updateTests(detachObjectsFromKeys(load(snapshot))));
 }
 
+const loadLastUpdated = (setLastUpdated: React.Dispatch<React.SetStateAction<string>>) => {
+    get(ref(db, "last_update")).then((snapshot) => {
+        setLastUpdated(snapshot.val())
+    })
+}
+
 function load(snapshot: DataSnapshot) {
     let snap = snapshot.val();
     // We can seperate the grades to each be an element in an array via the object's properties
@@ -40,4 +46,4 @@ function detachObjectsFromKeys(snapshot: any[]) {
     return tests;    
 }
 
-export {loadTests, db, loadChanges}
+export {loadTests, db, loadChanges, loadLastUpdated}
