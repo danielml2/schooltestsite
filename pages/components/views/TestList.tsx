@@ -100,9 +100,9 @@ class TestList extends React.Component {
   renderTests(tests: any[]) {
     let upcomingTest = tests[0]
     let upcomingTestDiv = [
-    <div className="mt-5">
+    <div key={0} className="mt-5">
       <div style={{ direction: "rtl"}} className="mr-5 text-2xl text-[#fc2d62] text-right underline font-bold">המועד הקרוב הבא</div>
-      <Test key={0} {...upcomingTest} upcomingStyle={true}></Test>
+      <Test {...upcomingTest} upcomingStyle={true}></Test>
       <hr className="mt-5"></hr>
     </div>
     ]

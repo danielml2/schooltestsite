@@ -78,8 +78,8 @@ class Input extends React.Component<InputProps, InputState> {
                 <div>
                     <OptionSelect mapOptions={new Map([["NONE","בחר אשכול א"],...subjectMajorsA, ...bothMajors])} onChange={(val) => this.onSubjectMajorChange(val, true)} startValue={this.state.majorA}></OptionSelect>
                     <OptionSelect mapOptions={new Map([["NONE","בחר אשכול ב"],...subjectMajorsB, ...bothMajors])} onChange={(val) => this.onSubjectMajorChange(val, false)} startValue={this.state.majorB}></OptionSelect>
-                </div>
-                <div className="text-base text-white ">(מילואי התיבות האלה, ובחירת ב"כל המקצועות" ובמספר כיתה שלכם, יגרום לזה להראות את כל המבחנים הרלוונטים אליכם)</div>
+                </div> 
+                <div className="text-base text-white">(מילואי התיבות האלה, ובחירת ב-כל המקצועות ובמספר כיתה שלכם, יגרום לזה להראות את כל המבחנים הרלוונטים אליכם)</div>
             </div>
             </div>
         </div>
