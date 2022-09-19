@@ -7,6 +7,7 @@ interface TestData {
     classNums: number[]
     gradeNum: number
     details?: string
+    upcomingStyle?: boolean
 
 }
  
@@ -18,14 +19,24 @@ class Test extends React.Component<TestData,TestData> {
     }
    
     render() {
-     
-        return <div className="card h-50 bg-[#5aaef2] shadow-xl mt-5 mx-2">
+        
+        if(this.props.upcomingStyle) {
+            return <div className="card h-75 bg-[#fa4371] shadow-xl mt-1 mx-2">
             <div className="card-body">
-                <div className="card-title ">Grade ({this.props.gradeNum}) {this.props.type}: {this.props.subject}</div>
+                <div className="card-title font-bold">Grade ({this.props.gradeNum}) {this.props.type}: {this.props.subject}</div>
                 <div className="">{displayClassNums(this.props.classNums)}</div>
                 {this.renderDate()}
             </div>
-        </div>;
+        </div>
+        }
+
+        return <div className="card h-50 bg-[#5aaef2] shadow-xl mt-5 mx-2">
+        <div className="card-body">
+            <div className="card-title ">Grade ({this.props.gradeNum}) {this.props.type}: {this.props.subject}</div>
+            <div className="">{displayClassNums(this.props.classNums)}</div>
+            {this.renderDate()}
+        </div>
+    </div>;
     }
 
     renderDate() {

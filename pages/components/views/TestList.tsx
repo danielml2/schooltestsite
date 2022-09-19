@@ -64,7 +64,16 @@ class TestList extends React.Component {
     this.setState({ tests: snapshot, displayTests: snapshot.sort((a,b) => a["dueDate"] - b["dueDate"]) });
   }
   renderTests(tests: any[]) {
-    return tests.map((test, index) => <Test key={index} {...test}></Test>);
+    let upcomingTest = tests[0]
+    let upcomingTestDiv = [
+    <div className="mt-5">
+      <div style={{ direction: "rtl"}} className="mr-5 text-2xl text-[#fc2d62] text-right underline font-bold">המועד הקרוב הבא</div>
+      <Test key={0} {...upcomingTest} upcomingStyle={true}></Test>
+      <hr className="mt-5"></hr>
+    </div>
+    ]
+
+    return upcomingTestDiv.concat(tests.slice(1).map((test, index) => <Test key={index+1} {...test}></Test>));
   }
 }
 

@@ -7,15 +7,7 @@ a {
   text-decoration: none;
 }
 
-.select {
-  @apply thing
+hr {
+  border: 0;
+  border-top: 2px solid #fa4371;
 }
-
-.thing {
-  textOverflow: ellipsis;
-  textSizeAdjust: auto
-}
-
-
-
-
