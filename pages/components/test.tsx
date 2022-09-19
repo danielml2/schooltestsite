@@ -56,7 +56,7 @@ class Test extends React.Component<TestData,TestData> {
         let da = new Intl.DateTimeFormat('he', { day: 'numeric' }).format(date)
         let days: any = Math.round((date.getTime() - new Date().getTime()) / 86400000)
         if(days <= 0) 
-            days = "היום"
+            days = "היום / עבר המועד"
         else if(days == 1)
             days = "מחר"
         else 
@@ -66,7 +66,7 @@ class Test extends React.Component<TestData,TestData> {
     }
     
     displayClassNums(classNums : number[]) {
-        let display = "לכיתות: "
+        let display = "למספרי כיתות: "
         if(classNums === undefined)
             return "לא נטען. אין כיתות?";   
 

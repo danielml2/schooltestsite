@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import OptionSelect from "./optionselect"
-import { subjects, testTypes, gradeNums, classNums } from "../../constants/constants"
+import { subjects, testTypes, gradeNums, classNums, subjectMajorsA, bothMajors, subjectMajorsB } from "../../constants/constants"
 
 interface InputProps {
     sendInput: (value: any) => void
@@ -12,12 +12,17 @@ interface InputState  {
     classNum: number
     testType: String
     includeHistory: boolean
+    majorA?: string,
+    majorB?: string
 }
  
 class Input extends React.Component<InputProps, InputState> {
   
+    majorRef: any;
+
     constructor(props: InputProps) {
         super(props);
+        this.majorRef = React.createRef();
     }
     
     async componentDidMount() {
@@ -31,8 +36,13 @@ class Input extends React.Component<InputProps, InputState> {
             classNum: !params.has("classNum") ? -1 : Number(params.get("classNum")),
             testType: !params.has("testType") ? "ALL" : String(params.get("testType")),
             includeHistory: !params.has("includeHistory") ? false : Boolean(params.get("includeHistory")),
+            majorA: !params.has("majorA") ? "NONE" : String(params.get("majorA")),
+            majorB: !params.has("majorB") ? "NONE" : String(params.get("majorB"))
         }
-        this.setState(filterParams)
+        this.setState(filterParams, () => {
+            if(this.state.grade >= 10)
+                this.majorRef.current.classList.remove("hidden");
+        })
         this.props.sendInput(filterParams)
     }
 
@@ -53,7 +63,7 @@ class Input extends React.Component<InputProps, InputState> {
 
             <OptionSelect arrOptions={classNums} onChange={(val) => this.onFilterChange("classNum", val)} startValue={this.state.classNum}></OptionSelect>
 
-            <OptionSelect  mapOptions={gradeNums} onChange={(val) => this.onFilterChange("grade", val)} startValue={this.state.grade}></OptionSelect>
+            <OptionSelect  mapOptions={gradeNums} onChange={(val) => this.onGradeChange(val)} startValue={this.state.grade}></OptionSelect>
             <div style={{ direction: "rtl"}}>
             <input type="checkbox" onChange={(event) => this.onFilterChange("includeHistory", event.target.checked) } checked={this.state.includeHistory}></input> 
 
@@ -61,6 +71,16 @@ class Input extends React.Component<InputProps, InputState> {
             <label style={{ direction: "rtl"}} className="text-white text-center">
                 להראות מבחנים קודמים להיום?
             </label>
+            <div id="majors" ref={this.majorRef} className="hidden mx-auto mt-5">
+                <div style={{ direction: "rtl"}} className="text-lg text-white">
+                לסנן לפי מגמות: {' '}
+                </div>
+                <div>
+                    <OptionSelect mapOptions={new Map([["NONE","בחר אשכול א"],...subjectMajorsA, ...bothMajors])} onChange={(val) => this.onSubjectMajorChange(val, true)} startValue={this.state.majorA}></OptionSelect>
+                    <OptionSelect mapOptions={new Map([["NONE","בחר אשכול ב"],...subjectMajorsB, ...bothMajors])} onChange={(val) => this.onSubjectMajorChange(val, false)} startValue={this.state.majorB}></OptionSelect>
+                </div>
+                <div className="text-base text-white ">(מילואי התיבות האלה, ובחירת ב"כל המקצועות" ובמספר כיתה שלכם, יגרום לזה להראות את כל המבחנים הרלוונטים אליכם)</div>
+            </div>
             </div>
         </div>
         </div>
@@ -73,7 +93,7 @@ class Input extends React.Component<InputProps, InputState> {
         if(value == "שכבתי")
              value = -1;
         
-        const defaultValues = ["ALL", -1, "שכבתי","-1",false]
+        const defaultValues = ["ALL", -1, "שכבתי","-1",false, undefined]
 
        let newState = this.state;
        (newState as any)[key] = value;
@@ -88,8 +108,48 @@ class Input extends React.Component<InputProps, InputState> {
 
         window.history.replaceState(null,'', "?"+params.toString())
         this.props.sendInput(this.state);
-    })
+    })}
+
+    onGradeChange(val: any) {
+        if(val >= 10)
+            this.majorRef.current.classList.remove("hidden")
+        else {
+            this.majorRef.current.classList.add("hidden")
+            this.setState({
+                majorA: "NONE",
+                majorB: "NONE"
+            }, () => {
+                const queryString = window.location.search;
+                const params = new URLSearchParams(queryString)
+        
+                params.delete("majorA")
+                params.delete("majorB")
+        
+                window.history.replaceState(null,'', "?"+params.toString())
+            })
+        }  
+        this.onFilterChange("grade", val)
     }
+
+    onSubjectMajorChange(major: any, isA: boolean) {
+        this.setState({
+            majorA: isA ? major : this.state.majorA,
+            majorB: !isA ? major : this.state.majorB
+        }, () => {
+            if(this.state.majorA != "NONE" && this.state.majorA != undefined && this.state.majorB != "NONE" && this.state.majorB != undefined)
+            {
+                const queryString = window.location.search;
+                const params = new URLSearchParams(queryString)
+        
+                params.set("majorA", this.state.majorA)
+                params.set("majorB", this.state.majorB)
+        
+                window.history.replaceState(null,'', "?"+params.toString())
+                this.props.sendInput(this.state);
+            }
+        })
+    }
+
 
 }
  

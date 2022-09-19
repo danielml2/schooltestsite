@@ -22,7 +22,6 @@ class OptionSelect extends React.Component<FilterInputProps> {
   }
 
   onSelect(event: any) {
-    if (this.props.onChange != undefined)
       this.props.onChange(event.target.value);
   }
 
@@ -36,7 +35,7 @@ class OptionSelect extends React.Component<FilterInputProps> {
         else 
             arr.push(<option style={{ direction: "rtl"}} key={key} value={String(key)}>{value}</option>)
   });
-    if (this.props.arrOptions != undefined)
+   if (this.props.arrOptions != undefined)
       return this.props.arrOptions.map((value) => {
         if(value === this.props.startValue) {
           return (<option style={{ direction: "rtl"}} key={value} value={value} selected={true}>{value}</option>)

@@ -1,31 +1,47 @@
+const subjectMajorsB: Map<string, string> = new Map([
+  ["PHYSICS", "פיזיקה"],
+  ["SPORTS", "חדר כושר"],
+  ["ARABIC", "ערבית"],
+  ["PHILOSOPHY", "פילוסופיה"],
+  ["THEATER", "תיאטרון"],
+  ["ANATOMY", "אנטומיה"]
+])
+
+
+const subjectMajorsA: Map<string, string> = new Map([
+  ["CHEMISTRY", "כימיה"],
+  ["CS", "מדעי המחשב"],
+  ["PSYCHOLOGY", "פסיכולוגיה"]
+])
+
+const bothMajors: Map<string, string> = new Map([
+  ["FILM", "תקשורת"],
+  ["BIOLOGY", "בילוגיה"],
+  ["GEOGRAPHY", "גיאוגרפיה"]
+])
+
+
 const subjects: Map<String, String> = new Map([
   ["ALL", "כל המקצועות"],
-  ["PHYSICS", "פיזיקה"],
+  ...subjectMajorsB,
+  ...subjectMajorsA,
+  ...bothMajors,
   ["MEKRA", "תנך"],
   ["MATH", "מתמטיקה"],
-  ["CS", "מדעי המחשב"],
-  ["BIOLOGY", "בילוגיה"],
   ["HEBREW", "עברית"],
   ["HISTORY", "היסטוריה"],
   ["TAVURA", "תיאוריה"],
-  ["CHEMISTRY", "כימיה"],
-  ["PHILOSOPHY", "פילוסופיה"],
   ["OTHER", "אחר"],
   ["MAGAMOT_B", "אשכול ב"],
   ["MAGAMOT_A", "אשכול א"],
   ["SAFROT", "ספרות"],
   ["ENGLISH", "אנגלית"],
   ["CITIZENSHIP", "אזרחות"],
-  ["SPORTS", "חדר כושר"],
-  ["THEATER", "תיאטרון"],
-  ["ARABIC", "ערבית"],
-  ["GEOGRAPHY", "גיאוגרפיה"],
-  ["PSYCHOLOGY", "פסיכולוגיה"],
-  ["FILM", "תקשורת"],
   ["SCIENCE", "מדעים"],
   ["TARBUT_ISRAEL", "תרבות ישראל"],
-  ["ANATOMY", "אנטומיה"],
 ]);
+
+
 
 const testTypes: Map<String, String> = new Map([
   ["ALL", "הכל"],
@@ -48,4 +64,4 @@ const gradeNums: Map<number, String> = new Map([
 
 const classNums: any[] = ["שכבתי",1,2,3,4,5,6,7,8];
 
-export { subjects, testTypes, classNums, gradeNums };
+export { subjects, testTypes, classNums, gradeNums, subjectMajorsA, subjectMajorsB, bothMajors};
