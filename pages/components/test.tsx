@@ -1,4 +1,6 @@
+import { bodyStreamToNodeStream } from "next/dist/server/body-streams";
 import React from "react";
+import { gradeNums, subjects, testTypes } from "../../constants/constants";
 
 interface TestData {
     subject: String
@@ -19,51 +21,64 @@ class Test extends React.Component<TestData,TestData> {
     }
    
     render() {
-        
         if(this.props.upcomingStyle) {
-            return <div className="card h-75 bg-[#fa4371] shadow-xl mt-1 mx-2">
-            <div className="card-body">
-                <div className="card-title font-bold">Grade ({this.props.gradeNum}) {this.props.type}: {this.props.subject}</div>
-                <div className="">{displayClassNums(this.props.classNums)}</div>
-                {this.renderDate()}
+            return <div className="card h-50 bg-[#fa4371] shadow-xl mt-1 mx-2">
+            <div className="card-body inverse">
+                {this.renderTestBody()}
             </div>
         </div>
         }
 
         return <div className="card h-50 bg-[#5aaef2] shadow-xl mt-5 mx-2">
-        <div className="card-body">
-            <div className="card-title ">Grade ({this.props.gradeNum}) {this.props.type}: {this.props.subject}</div>
-            <div className="">{displayClassNums(this.props.classNums)}</div>
-            {this.renderDate()}
+        <div className="card-body inverse">
+            {this.renderTestBody()}
         </div>
     </div>;
+    }
+
+    renderTestBody() {
+        let body = [];
+
+        if(this.props.upcomingStyle)
+            body.push(<div className="card-title font-bold inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}</div>)
+        else
+            body.push(<div className="card-title inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}</div>)
+        body.push( <div className="">{this.displayClassNums(this.props.classNums)}</div>)
+        body.push(this.renderDate())   
+           
+       return body;  
     }
 
     renderDate() {
         if(this.props.dueDate == undefined) return;
         let date = new Date(this.props.dueDate)
-        const mo = new Intl.DateTimeFormat('he', { month: 'long' }).format(date)
-        const da = new Intl.DateTimeFormat('he', { day: '2-digit' }).format(date)
-        return <div className="">{da} {mo}</div>
-    }
+        let mo = new Intl.DateTimeFormat('he', { month: 'long' }).format(date)
+        let da = new Intl.DateTimeFormat('he', { day: 'numeric' }).format(date)
+        let days: any = Math.round((date.getTime() - new Date().getTime()) / 86400000)
+        if(days <= 0) 
+            days = "היום"
+        else if(days == 1)
+            days = "מחר"
+        else 
+            days = "(עוד " + days +  "  ימים)"        
 
-    getSubject() {
-        return this.props.subject;
+        return <div className="flex flex-row font-bold">ב-{da} {mo} &nbsp;<div className=" font-normal italic">{days}</div></div>
     }
-
     
-}
- function displayClassNums(classNums : number[]) {
-    let display = ""
-    if(classNums === undefined)
+    displayClassNums(classNums : number[]) {
+        let display = "לכיתות: "
+        if(classNums === undefined)
+            return "לא נטען. אין כיתות?";   
+
+        let isEveryone = false;    
+        classNums.forEach((num,index) => {
+            if(num == -1 && !isEveryone) display = "שכבתי"
+            else if(!isEveryone) {
+                display += num;
+                if(index != classNums.length-1) display += ", "
+            }
+        })
         return display;
-    classNums.forEach((num,index) => {
-        if(num == -1) display += "ALL"
-        else {
-            display += num;
-            if(index != classNums.length-1) display += ", "
-        }
-    })
-    return display;
+    }
 }
 export default Test;
