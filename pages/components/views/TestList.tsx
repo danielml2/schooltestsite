@@ -44,7 +44,7 @@ class TestList extends React.Component {
     let filtered = this.state.tests.filter(value => {
         // i hate that i have to do the casting for each type here but typescript is big dumb so i have to, and yeah
         let subjectFilter;
-        if((filters.grade >= 10 || filters.grade == -1) && this.isMajorSubject(filters.subject)) {
+        if(this.isMajorSubject(filters.subject)) {
             subjectFilter = this.unselectedMajorFilter(filters, value["subject"])
         } else if(filters.grade >= 10 && filters.majorA != undefined && filters.majorA != "NONE" && filters.majorB != undefined && filters.majorB != "NONE") {
           subjectFilter = this.selectedMajorFilter(filters, value["subject"])
@@ -72,12 +72,12 @@ class TestList extends React.Component {
   }
 
   unselectedMajorFilter(filters: any, testSubject: any) {
-
-      return (filters.subject == "MAGAMOT_A" && subjectMajorsA.has(testSubject)) 
+    
+      return (filters.subject == "MAGAMOT_A" && (subjectMajorsA.has(testSubject) || bothMajors.has(testSubject))) 
       // If searching for ALL events relevant to major A/B, show all the tests that relate to the subjects that are on A/B
-      || (filters.subject == "MAGAMOT_B" && subjectMajorsB.has(testSubject))
+      || (filters.subject == "MAGAMOT_B" && (subjectMajorsB.has(testSubject) || bothMajors.has(testSubject)))
       || (filters.subject == testSubject) // If it's a major A/B event and we're looking for major a/b events
-      || ((subjectMajorsA.has(filters.subject) || bothMajors.has(filters.subject) && testSubject == "MAGAMOT_A")) // Show all Major A events if the subject is a major A subject
+      || ((subjectMajorsA.has(filters.subject) || bothMajors.has(filters.subject)) && testSubject == "MAGAMOT_A") // Show all Major A events if the subject is a major A subject
       || ((subjectMajorsB.has(filters.subject) || bothMajors.has(filters.subject)) && testSubject == "MAGAMOT_B") // Show all Major B events if the subject is a major B subject
   }
 
@@ -98,6 +98,8 @@ class TestList extends React.Component {
     this.setState({ tests: snapshot, displayTests: snapshot.sort((a,b) => a["dueDate"] - b["dueDate"]) });
   }
   renderTests(tests: any[]) {
+    if(tests.length == 0)
+      return <div></div>
     let upcomingTest = tests[0]
     let upcomingTestDiv = [
     <div key={0} className="mt-5">

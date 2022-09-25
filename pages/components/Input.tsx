@@ -57,7 +57,7 @@ class Input extends React.Component<InputProps, InputState> {
         </div>
         <div className="collapse-content"> 
         <div style={{ direction: "rtl"}} className="mx-auto">
-            <OptionSelect mapOptions={subjects} onChange={(val) => this.onFilterChange("subject", val)} startValue={this.state.subject}></OptionSelect>
+            <OptionSelect mapOptions={subjects} onChange={(val) => this.onSubjectChange(val)} startValue={this.state.subject}></OptionSelect>
 
             <OptionSelect mapOptions={testTypes} onChange={(val) => this.onFilterChange("testType", val)} startValue={this.state.testType}></OptionSelect>
 
@@ -111,24 +111,35 @@ class Input extends React.Component<InputProps, InputState> {
     })}
 
     onGradeChange(val: any) {
-        if(val >= 10)
+        if(val >= 10 && this.state.subject == "ALL")
             this.majorRef.current.classList.remove("hidden")
-        else {
-            this.majorRef.current.classList.add("hidden")
-            this.setState({
-                majorA: "NONE",
-                majorB: "NONE"
-            }, () => {
-                const queryString = window.location.search;
-                const params = new URLSearchParams(queryString)
-        
-                params.delete("majorA")
-                params.delete("majorB")
-        
-                window.history.replaceState(null,'', "?"+params.toString())
-            })
-        }  
+        else 
+            this.hideMajorsFilter()
         this.onFilterChange("grade", val)
+    }
+
+    onSubjectChange(subjectVal: any) {
+        if(this.state.grade >= 10 && subjectVal == "ALL")
+            this.majorRef.current.classList.remove("hidden")
+        else
+            this.hideMajorsFilter()
+        this.onFilterChange("subject", subjectVal);    
+    }
+
+    hideMajorsFilter() {
+        this.majorRef.current.classList.add("hidden")
+        this.setState({
+            majorA: "NONE",
+            majorB: "NONE"
+        }, () => {
+            const queryString = window.location.search;
+            const params = new URLSearchParams(queryString)
+    
+            params.delete("majorA")
+            params.delete("majorB")
+    
+            window.history.replaceState(null,'', "?"+params.toString())
+        })
     }
 
     onSubjectMajorChange(major: any, isA: boolean) {

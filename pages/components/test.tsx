@@ -10,7 +10,7 @@ interface TestData {
     gradeNum: number
     details?: string
     upcomingStyle?: boolean
-
+    creationText?: string
 }
  
  
@@ -45,6 +45,7 @@ class Test extends React.Component<TestData,TestData> {
             body.push(<div className="card-title inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}</div>)
         body.push( <div className="">{this.displayClassNums(this.props.classNums)}</div>)
         body.push(this.renderDate())   
+        body.push(<span className="text-sm italic inverse"> נוצר מתוך הטקסט הזה: {"\""}{this.props.creationText}{"\""} <a href="" className="text-md underline">תוצאה לא נכונה?</a></span>)
            
        return body;  
     }
