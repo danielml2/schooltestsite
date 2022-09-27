@@ -1,5 +1,5 @@
 import React from "react";
-import { loadTests, db } from "../../../firebase/firebase";
+import { loadTests } from "../../../firebase/firebase";
 import Test from "../test";
 import Input from "../Input";
 import { subjectMajorsB, subjectMajorsA, testTypes, bothMajors } from "../../../constants/constants";
@@ -102,9 +102,9 @@ class TestList extends React.Component {
       return <div></div>
     let upcomingTest = tests[0]
     let upcomingTestDiv = [
-    <div key={0} className="mt-5">
+    <div className="mt-5">
       <div style={{ direction: "rtl"}} className="mr-5 text-2xl text-[#fc2d62] text-right underline font-bold">המועד הקרוב הבא</div>
-      <Test {...upcomingTest} upcomingStyle={true}></Test>
+      <Test key={0}  {...upcomingTest} upcomingStyle={true}></Test>
       <hr className="mt-5"></hr>
     </div>
     ]

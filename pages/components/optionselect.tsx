@@ -28,7 +28,7 @@ class OptionSelect extends React.Component<FilterInputProps> {
   renderOptions() {
     let arr: any[] = [];
     if (this.props.mapOptions != undefined)
-      this.props.mapOptions.forEach((value, key) => {
+      this.props.mapOptions.forEach((value, key) => { 
         if(key == this.props.startValue) {
           arr.push(<option style={{ direction: "rtl"}} key={key} value={String(key)} selected={true}>{value}</option>)
         } 

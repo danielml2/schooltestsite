@@ -45,7 +45,7 @@ class Test extends React.Component<TestData,TestData> {
             body.push(<div className="card-title inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}</div>)
         body.push( <div className="">{this.displayClassNums(this.props.classNums)}</div>)
         body.push(this.renderDate())   
-        body.push(<span className="text-sm italic inverse"> נוצר מתוך הטקסט הזה: {"\""}{this.props.creationText}{"\""} <a href="" className="text-md underline">תוצאה לא נכונה?</a></span>)
+        body.push(<span className="text-sm italic inverse"> נוצר מתוך הטקסט הזה: {"\""}{this.props.creationText}{"\""} <a href={this.reportLink()} className="text-md underline">תוצאה לא נכונה?</a></span>)
            
        return body;  
     }
@@ -64,6 +64,21 @@ class Test extends React.Component<TestData,TestData> {
             days = "(עוד " + days +  "  ימים)"        
 
         return <div className="flex flex-row font-bold">ב-{da} {mo} &nbsp;<div className=" font-normal italic">{days}</div></div>
+    }
+
+    reportLink() {
+        let params = new URLSearchParams()
+        let date = new Date(this.props.dueDate)
+        let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
+        let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(date);
+        let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
+        let newDate = ye + "_" + mo + "_" + da;
+
+        params.set("testID", this.props.subject.toLowerCase() + "_" + this.props.type.toLowerCase() + "_" + newDate)
+        params.set("grade", String(this.props.gradeNum))
+
+        console.log(window.location.origin + "/report")
+        return window.location.origin + "/report?" + params.toString() 
     }
     
     displayClassNums(classNums : number[]) {

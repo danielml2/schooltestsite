@@ -1,21 +1,44 @@
+import { FirebaseApp, getApp, getApps, initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref, DataSnapshot, get } from "firebase/database";
-import { initializeApp } from "firebase/app";
-const app = initializeApp({
-    apiKey: "AIzaSyDIsnhdo4bc6-vFu24Hah9BGdfMb61aXeE",
-    authDomain: "schooltests-419f5.firebaseapp.com",
-    databaseURL: "https://schooltests-419f5-default-rtdb.europe-west1.firebasedatabase.app/"
-})
+import { getFirestore, addDoc, collection} from "firebase/firestore" 
 
-const db = getDatabase(app);
 
+const loadApp = (): FirebaseApp => {
+    if(getApps().length <= 0) {
+        return initializeApp({
+            apiKey: "AIzaSyDIsnhdo4bc6-vFu24Hah9BGdfMb61aXeE",
+            authDomain: "schooltests-419f5.firebaseapp.com",
+            databaseURL: "https://schooltests-419f5-default-rtdb.europe-west1.firebasedatabase.app/",
+            projectId: "schooltests-419f5"
+        })
+    } else {
+        return getApp();
+    }
+}
+
+
+let firebaseApp: FirebaseApp = loadApp();
+
+const realTimeDB = getDatabase(firebaseApp);
+const firestoreDB = getFirestore(firebaseApp)
 
 const loadTests = async (year: string, updateTests : (snapshot: any) => void) => {
-    get(ref(db, `years/${year}/tests/`)).then((snapshot) => updateTests(detachObjectsFromKeys(load(snapshot))));
+    get(ref(realTimeDB, `years/${year}/tests/`)).then((snapshot) => updateTests(detachObjectsFromKeys(load(snapshot))));
+}
+
+const addReport = async (report: any, finishedCallback: () => void) => {
+    await addDoc(collection(firestoreDB, "reports"), report).then(() => finishedCallback());
 }
 
 const loadLastUpdated = (setLastUpdated: React.Dispatch<React.SetStateAction<string>>) => {
-    get(ref(db, "last_update")).then((snapshot) => {
+    get(ref(realTimeDB, "last_update")).then((snapshot) => {
         setLastUpdated(snapshot.val())
+    })
+}
+
+const getTest = (dbID: string, gradeNum: number, year: string, returnCallback: (snapshot: any) => void) => {
+    get(ref(realTimeDB, `years/${year}/tests/grade${gradeNum}/${dbID}/`)).then((snapshot) => {
+        returnCallback(snapshot.val())
     })
 }
 
@@ -30,7 +53,7 @@ function load(snapshot: DataSnapshot) {
 }
 
 const loadChanges = async (limit: any,updateChanges : (snapshot: any) => void)  => {
-    get(ref(db,"changes/")).then((snasphot) => updateChanges(detachObjectsFromKeys((load(snasphot)))))
+    get(ref(realTimeDB,"changes/")).then((snasphot) => updateChanges(detachObjectsFromKeys((load(snasphot)))))
 }
 
 function detachObjectsFromKeys(snapshot: any[]) {
@@ -46,4 +69,4 @@ function detachObjectsFromKeys(snapshot: any[]) {
     return tests;    
 }
 
-export {loadTests, db, loadChanges, loadLastUpdated}
+export {loadTests, loadChanges, loadLastUpdated, getTest, addReport}
