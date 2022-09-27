@@ -102,14 +102,14 @@ class TestList extends React.Component {
       return <div></div>
     let upcomingTest = tests[0]
     let upcomingTestDiv = [
-    <div className="mt-5">
+    <div key={0} className="mt-5">
       <div style={{ direction: "rtl"}} className="mr-5 text-2xl text-[#fc2d62] text-right underline font-bold">המועד הקרוב הבא</div>
-      <Test key={0}  {...upcomingTest} upcomingStyle={true}></Test>
+      <Test key={1}  {...upcomingTest} upcomingStyle={true}></Test>
       <hr className="mt-5"></hr>
     </div>
     ]
 
-    return upcomingTestDiv.concat(tests.slice(1).map((test, index) => <Test key={index+1} {...test}></Test>));
+    return upcomingTestDiv.concat(tests.slice(1).map((test, index) => <Test key={index+2} {...test}></Test>));
   }
 }
 

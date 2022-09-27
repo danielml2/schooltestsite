@@ -8,9 +8,9 @@ interface TestData {
     dueDate: number
     classNums: number[]
     gradeNum: number
-    details?: string
     upcomingStyle?: boolean
     creationText?: string
+    reportLink?: string
 }
  
  
@@ -19,8 +19,28 @@ class Test extends React.Component<TestData,TestData> {
     constructor(props : TestData) {
         super(props);
     }
+
+    componentDidMount(): void {
+        let params = new URLSearchParams()
+
+        let date = new Date(this.props.dueDate == undefined ? 0 : this.props.dueDate)
+        let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
+        let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(date);
+        let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
+        let newDate = ye + "_" + mo + "_" + da;
+
+        params.set("testID", this.props.subject.toLowerCase() + "_" + this.props.type.toLowerCase() + "_" + newDate)
+        params.set("grade", String(this.props.gradeNum))        
+
+        this.setState({
+            reportLink: window.location.origin + "/report?" + params.toString() 
+        })
+    }
    
     render() {
+        if(this.state == undefined || this.state.reportLink == undefined)
+            return <div>Loading..</div>
+
         if(this.props.upcomingStyle) {
             return <div className="card h-50 bg-[#fa4371] shadow-xl mt-1 mx-2">
             <div className="card-body inverse">
@@ -38,19 +58,24 @@ class Test extends React.Component<TestData,TestData> {
 
     renderTestBody() {
         let body = [];
+        let key = 0;
 
         if(this.props.upcomingStyle)
-            body.push(<div className="card-title font-bold inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}</div>)
+            body.push(<div key={key} className="card-title font-bold inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}</div>)
         else
-            body.push(<div className="card-title inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}</div>)
-        body.push( <div className="">{this.displayClassNums(this.props.classNums)}</div>)
-        body.push(this.renderDate())   
-        body.push(<span className="text-sm italic inverse"> נוצר מתוך הטקסט הזה: {"\""}{this.props.creationText}{"\""} <a href={this.reportLink()} className="text-md underline">תוצאה לא נכונה?</a></span>)
+            body.push(<div key={key} className="card-title inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}</div>)
+        
+        key++;    
+        body.push(<div key={key} className="">{this.displayClassNums(this.props.classNums)}</div>)
+        key++;  
+        body.push(this.renderDate(key))   
+        key++;  
+        body.push(<span key={key} className="text-sm italic inverse"> נוצר מתוך הטקסט הזה: {"\""}{this.props.creationText}{"\""} <a href={this.state.reportLink} className="text-md underline">תוצאה לא נכונה?</a></span>)
            
        return body;  
     }
 
-    renderDate() {
+    renderDate(key: number) {
         if(this.props.dueDate == undefined) return;
         let date = new Date(this.props.dueDate)
         let mo = new Intl.DateTimeFormat('he', { month: 'long' }).format(date)
@@ -63,22 +88,7 @@ class Test extends React.Component<TestData,TestData> {
         else 
             days = "(עוד " + days +  "  ימים)"        
 
-        return <div className="flex flex-row font-bold">ב-{da} {mo} &nbsp;<div className=" font-normal italic">{days}</div></div>
-    }
-
-    reportLink() {
-        let params = new URLSearchParams()
-        let date = new Date(this.props.dueDate)
-        let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
-        let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(date);
-        let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
-        let newDate = ye + "_" + mo + "_" + da;
-
-        params.set("testID", this.props.subject.toLowerCase() + "_" + this.props.type.toLowerCase() + "_" + newDate)
-        params.set("grade", String(this.props.gradeNum))
-
-        console.log(window.location.origin + "/report")
-        return window.location.origin + "/report?" + params.toString() 
+        return <div key={key} className="flex flex-row font-bold">ב-{da} {mo} &nbsp;<div className=" font-normal italic">{days}</div></div>
     }
     
     displayClassNums(classNums : number[]) {

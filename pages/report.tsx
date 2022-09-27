@@ -12,7 +12,6 @@ function ReportPage() {
     const [issueType, setIssueType] = useState("TWO_TESTS")
     const [grade, setGrade] = useState(0)
 
-    const inputRef = React.createRef();
 
     let [disableInput, setDisabled] = useState(false);
 

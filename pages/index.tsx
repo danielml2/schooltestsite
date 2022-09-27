@@ -8,7 +8,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     loadLastUpdated(setLastUpdated.bind(this))
-  });
+  }, []);
 
   return (
     <div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center">
