@@ -2,7 +2,7 @@ import React from "react";
 import { loadTests } from "../../../firebase/firebase";
 import Test from "../test";
 import Input from "../Input";
-import { subjectMajorsB, subjectMajorsA, testTypes, bothMajors } from "../../../constants/constants";
+import { subjectMajorsB, subjectMajorsA, testTypes, bothMajors, extraNamesForMajors } from "../../../constants/constants";
 
 
 
@@ -56,7 +56,10 @@ class TestList extends React.Component {
         let gradeFilter = Number(value["gradeNum"]) == filters.grade || filters.grade == -1;
         let typeFilter = filters.testType == "ALL" ? true : String(value["type"]) == filters.testType
 
-        let historyFilter = filters.includeHistory ? true : new Date().getTime() <= value["dueDate"];
+        let days = this.toDays(new Date().getTime() - value["dueDate"]);
+        let isHistory = (days <= 0 || (days >= 0 && days <= 1)); 
+        let historyFilter = filters.includeHistory ? true : isHistory;
+        
 
         return subjectFilter && classFilter && gradeFilter && typeFilter && historyFilter;
     }) 
@@ -86,8 +89,8 @@ class TestList extends React.Component {
 
 
     return testSubject == filters.subject ||
-      filters.majorA == testSubject && (filters.subject == "ALL" || filters.subject == filters.majorA) ||
-      filters.majorB == testSubject  && (filters.subject == "ALL" || filters.subject == filters.majorB) ||
+      (filters.majorA == testSubject || extraNamesForMajors.get(filters.majorA)?.includes(testSubject)) && (filters.subject == "ALL" || filters.subject == filters.majorA) ||
+      (filters.majorB == testSubject || extraNamesForMajors.get(filters.majorB)?.includes(testSubject))  && (filters.subject == "ALL" || filters.subject == filters.majorB) ||
       (testSubject == "MAGAMOT_A" && (subjectMajorsA.has(filters.majorA) || bothMajors.has(filters.majorA))) && (filters.subject == "ALL" || filters.subject == filters.majorA) ||
       (testSubject == "MAGAMOT_B" && (subjectMajorsB.has(filters.majorB) || bothMajors.has(filters.majorB))) && (filters.subject == "ALL" || filters.subject == filters.majorA) ||
       (!subjectMajorsA.has(testSubject) && !subjectMajorsB.has(testSubject) && !bothMajors.has(testSubject) && !(filters.grade == 12 && testSubject == "SAFROT" && filters.subject != "SAFROT") && filters.subject == "ALL")
@@ -110,6 +113,10 @@ class TestList extends React.Component {
     ]
 
     return upcomingTestDiv.concat(tests.slice(1).map((test, index) => <Test key={index+2} {...test}></Test>));
+  }
+
+  toDays(dateLong: number) {
+    return dateLong /  86400000;
   }
 }
 

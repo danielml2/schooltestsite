@@ -65,7 +65,7 @@ function ReportPage() {
             </select>
             <label className="text-white mt-5">מה אמור להיות במקום?</label>
             <textarea className="inverse" style={{ minHeight: "6rem"}} onChange={(event) => setDetails(event.target.value)} disabled={disableInput}></textarea>
-            <input type="submit" onClick={() => onSubmit()} className="btn mt-5" value="שלח דוח תיקון"></input>
+            <input type="submit" onClick={() => onSubmit()} className="btn mt-5" value="שלח דוח תיקון" disabled={disableInput}></input>
         </div>
     </div>
 
