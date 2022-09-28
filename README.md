@@ -4,7 +4,7 @@
 ### What is this project?
 This, as the name of the repository says, is a site where people can view all of the tests they have coming up and in the test schedule generally.
 
-This is combined of two apps, one app is a [java "server side"](https://github.com/danielml2/TestSyncer) which takes all of the tests from the Google Excel of the test schedule and exports them for each grade, onto a firebase database, and essentially syncs it up with any changes that happen to the test schedule.
+This is combined of two apps, one app is a [java "server side"](https://github.com/danielml2/TestSyncer) which takes all of the tests from the excel file of the test schedule and exports them for each grade, onto a firebase database, and essentially syncs it up with any changes that happen to the test schedule.
 
 And this is where it shows the tests on a website, nicely organized and stuff.
 

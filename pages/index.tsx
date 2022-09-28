@@ -14,6 +14,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
+        <link rel="shortcut icon" href="favicon.ico"></link>
         <title>SchoolTests - לוח מבחנים</title>
       </Head>
       <div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center">
