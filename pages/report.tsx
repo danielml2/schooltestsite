@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import  Head  from "next/head";
 import React, { useEffect, useRef, useState } from "react";
 import { getTest, addReport } from "../firebase/firebase";
 import Test from "./components/test";
@@ -11,6 +12,7 @@ function ReportPage() {
     const [details, setDetails] = useState("")
     const [issueType, setIssueType] = useState("TWO_TESTS")
     const [grade, setGrade] = useState(0)
+    const [title, setTitle] = useState("טוען...")
 
 
     let [disableInput, setDisabled] = useState(false);
@@ -21,6 +23,7 @@ function ReportPage() {
         if(!params.has("testID") || !params.has("grade"))
         {
             setReportState("InvalidOrFailed")
+            setTitle("מבחן לא מזוהה")
             return;
         } 
 
@@ -32,27 +35,32 @@ function ReportPage() {
         getTest(testID, grade, "2022-2023", (snapshot) => {
             setTest(snapshot)
             setReportState("FinishedLoading")
+            setTitle("דוח טעות זיהוי")
         })
 
     }, [])
 
+    let head = <Head><title>{title}</title></Head>
+
     if((test == null || test == undefined) && reportState == "Loading") {
-        return <div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center text-3xl text-white">
-            <div className="mt-20">Loading...</div></div>
+        return <div>{head}<div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center text-3xl text-white">
+             <div className="mt-20">Loading...</div></div></div>
     } else if(test == null || test == undefined) {
-        return <div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center text-3xl text-white">
-            <div className="mt-20">Invalid ID or missing arguments</div>
+        return <div>{head}<div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center text-3xl text-white">
+            <div className="mt-20">Invalid ID or missing arguments</div></div>
         </div>
     } else if(reportState == "Submitted") {
-        return <div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center text-3xl text-white">
+        return <div>{head}<div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center text-3xl text-white">
             <div className="flex flex-col">
                 <div className="mt-20 inverse">תודה על העזרה!</div>
                 <input className="btn mt-10" type="button" onClick={() => { history.back() }} value="לחזור לרשימה"></input>
             </div>
-        </div>
+        </div></div>
     }
 
-    return <div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center">
+    return <div>
+        {head}
+        <div className="min-h-screen  bg-[#263238] overflow-hidden flex justify-center">
         <div className="flex flex-col inverse">
             <div className="inverse text-3xl text-white mt-5 text-center">דוח טעות בזיהוי מבחן</div>
             <Test {...test} upcomingStyle={false}></Test>
@@ -68,6 +76,7 @@ function ReportPage() {
             <input type="submit" onClick={() => onSubmit()} className="btn mt-5" value="שלח דוח תיקון" disabled={disableInput}></input>
         </div>
     </div>
+        </div>
 
     function onSubmit() {
         let report = {
@@ -80,6 +89,7 @@ function ReportPage() {
         setDisabled(true)
         addReport(report, () => {
             setReportState("Submitted")
+            setTitle("דוח טעות זיהוי הוגש!")
         });
 
     }
