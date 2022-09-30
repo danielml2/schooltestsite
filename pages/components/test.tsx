@@ -75,21 +75,21 @@ class Test extends React.Component<TestData,TestData> {
         let key = 0;
 
         if(this.props.upcomingStyle)
-            body.push(<div key={key} className="card-title font-bold inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}
+            body.push(<div key={key} className="card-title dark:text-black font-bold inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}
              {this.renderManualBadge()}</div>)
         else
-            body.push(<div key={key} className="card-title inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}
+            body.push(<div key={key} className="card-title dark:text-black inverse">{gradeNums.get(this.props.gradeNum)} - {testTypes.get(this.props.type)} {subjects.get(this.props.subject)}
             {this.renderManualBadge()}</div>)
         
         key++;    
-        body.push(<div key={key} className="">{this.displayClassNums(this.props.classNums)}</div>)
+        body.push(<div key={key} className="dark:text-black ">{this.displayClassNums(this.props.classNums)}</div>)
         key++;  
         body.push(this.renderDate(key))   
         key++;  
         if(!this.props.manual) 
-            body.push(<span key={key} className="text-sm italic inverse"> נוצר מתוך הטקסט הזה: {"\""}{this.props.creationText}{"\""} <a href={this.state.reportLink} className="text-md underline">תוצאה לא נכונה?</a></span>)
+            body.push(<span key={key} className="text-sm dark:text-black italic inverse"> נוצר מתוך הטקסט הזה: {"\""}{this.props.creationText}{"\""} <a href={this.state.reportLink} className="text-md underline">תוצאה לא נכונה?</a></span>)
         else
-            body.push(<span key={key} className="text-sm italic inverse"> במקור נוצר מתוך הטקסט הזה: {"\""}{this.props.creationText}{"\""}</span>)
+            body.push(<span key={key} className="text-sm dark:text-black italic inverse"> במקור נוצר מתוך הטקסט הזה: {"\""}{this.props.creationText}{"\""}</span>)
 
        return body;  
     }
@@ -102,17 +102,17 @@ class Test extends React.Component<TestData,TestData> {
         let da = new Intl.DateTimeFormat('he', { day: 'numeric' }).format(date)
         let days: any = (date.getTime() - now.getTime()) / 86400000
         
-        // console.log("days: " + days)
         if(days <= 0 && days >= -1) 
             days = "היום"
         else if(days <= 0)
             days = "עבר המועד"
         else if(days <= 1)
             days = "מחר"
-        else 
+        else {
+            days += 1;
             days = "(עוד " + Math.round(days) +  "  ימים)"        
-
-        return <div key={key} className="flex flex-row font-bold">ב-{da} {mo} &nbsp;<div className=" font-normal italic">{days}</div></div>
+        }
+        return <div key={key} className="flex flex-row font-bold dark:text-black">ב-{da} {mo} &nbsp;<div className=" font-normal italic">{days}</div></div>
     }
 
     renderManualBadge() {
