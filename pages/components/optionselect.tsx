@@ -15,7 +15,7 @@ class OptionSelect extends React.Component<FilterInputProps> {
 
   render() {
     return (
-        <select  className="" onChange={this.onSelect.bind(this)}>
+        <select className="dark:text-black" onChange={this.onSelect.bind(this)}>
           {this.renderOptions()}
         </select>
     );
