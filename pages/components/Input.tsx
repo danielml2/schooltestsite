@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import OptionSelect from "./optionselect"
-import { subjects, testTypes, gradeNums, classNums, subjectMajorsA, bothMajors, subjectMajorsB } from "../../constants/constants"
+import { subjects, testTypes, gradeNums, classNums, subjectMajorsA, bothMajors, subjectMajorsB, majors } from "../../constants/constants"
 
 interface InputProps {
     sendInput: (value: any) => void
@@ -76,8 +76,8 @@ class Input extends React.Component<InputProps, InputState> {
                 לסנן לפי מגמות: {' '}
                 </div>
                 <div>
-                    <OptionSelect mapOptions={new Map([["NONE","בחר אשכול א"],...subjectMajorsA, ...bothMajors])} onChange={(val) => this.onSubjectMajorChange(val, true)} startValue={this.state.majorA}></OptionSelect>
-                    <OptionSelect mapOptions={new Map([["NONE","בחר אשכול ב"],...subjectMajorsB, ...bothMajors])} onChange={(val) => this.onSubjectMajorChange(val, false)} startValue={this.state.majorB}></OptionSelect>
+                    <OptionSelect mapOptions={new Map([["NONE","בחר אשכול א"],...majors])} onChange={(val) => this.onSubjectMajorChange(val, true)} startValue={this.state.majorA}></OptionSelect>
+                    <OptionSelect mapOptions={new Map([["NONE","בחר אשכול ב"],...majors])} onChange={(val) => this.onSubjectMajorChange(val, false)} startValue={this.state.majorB}></OptionSelect>
                 </div> 
                 <div className="text-base text-white">(מילואי התיבות האלה, ובחירת ב-כל המקצועות ובמספר כיתה שלכם, יגרום לזה להראות את כל המבחנים הרלוונטים אליכם)</div>
             </div>

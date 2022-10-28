@@ -2,7 +2,7 @@ import React from "react";
 import { loadTests } from "../../../firebase/firebase";
 import Test from "../test";
 import Input from "../Input";
-import { subjectMajorsB, subjectMajorsA, testTypes, bothMajors, extraNamesForMajors } from "../../../constants/constants";
+import { subjectMajorsB, subjectMajorsA, testTypes, bothMajors, extraNamesForMajors, majors } from "../../../constants/constants";
 
 
 
@@ -71,7 +71,7 @@ class TestList extends React.Component {
   }
 
   isMajorSubject(subject: string) {
-    return subject.includes("MAGAMOT") || subjectMajorsB.has(subject) || subjectMajorsA.has(subject) || bothMajors.has(subject);
+    return subject.includes("MAGAMOT") || majors.has(subject) || extraNamesForMajors.has(subject);
   }
 
   unselectedMajorFilter(filters: any, testSubject: any) {
@@ -91,9 +91,8 @@ class TestList extends React.Component {
     return testSubject == filters.subject ||
       (filters.majorA == testSubject || extraNamesForMajors.get(filters.majorA)?.includes(testSubject)) && (filters.subject == "ALL" || filters.subject == filters.majorA) ||
       (filters.majorB == testSubject || extraNamesForMajors.get(filters.majorB)?.includes(testSubject))  && (filters.subject == "ALL" || filters.subject == filters.majorB) ||
-      (testSubject == "MAGAMOT_A" && (subjectMajorsA.has(filters.majorA) || bothMajors.has(filters.majorA))) && (filters.subject == "ALL" || filters.subject == filters.majorA) ||
-      (testSubject == "MAGAMOT_B" && (subjectMajorsB.has(filters.majorB) || bothMajors.has(filters.majorB))) && (filters.subject == "ALL" || filters.subject == filters.majorA) ||
-      (!subjectMajorsA.has(testSubject) && !subjectMajorsB.has(testSubject) && !bothMajors.has(testSubject) && !(filters.grade == 12 && testSubject == "SAFROT" && filters.subject != "SAFROT") && filters.subject == "ALL")
+      (testSubject == "MAGAMOT_A") || (testSubject == "MAGAMOT_B") ||
+      (!majors.has(testSubject) && !extraNamesForMajors.has(testSubject) && !(filters.grade == 12 && testSubject == "SAFROT" && filters.subject != "SAFROT") && filters.subject == "ALL")
   } 
 
 

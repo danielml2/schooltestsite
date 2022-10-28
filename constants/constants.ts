@@ -4,7 +4,6 @@ const subjectMajorsB: Map<string, string> = new Map([
   ["ARABIC", "ערבית"],
   ["PHILOSOPHY", "פילוסופיה"],
   ["THEATER", "תיאטרון"],
-  ["ANATOMY", "אנטומיה"]
 ])
 
 
@@ -22,6 +21,12 @@ const bothMajors: Map<string, string> = new Map([
 
 const extraNamesForMajors: Map<string,string[]> = new Map([
     ["SPORTS",["ANATOMY"]]
+])
+
+const majors: Map<string, string> = new Map([
+  ...subjectMajorsA,
+  ...subjectMajorsB,
+  ...bothMajors
 ])
 
 
@@ -68,4 +73,4 @@ const gradeNums: Map<number, String> = new Map([
 
 const classNums: any[] = ["שכבתי",1,2,3,4,5,6,7,8];
 
-export { subjects, testTypes, classNums, gradeNums, subjectMajorsA, subjectMajorsB, bothMajors,extraNamesForMajors};
+export { subjects, testTypes, classNums, gradeNums, subjectMajorsA, subjectMajorsB, bothMajors,extraNamesForMajors, majors};
